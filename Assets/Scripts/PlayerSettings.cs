@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 [Serializable]
 public class PlayerSaveData
 {
-    public string Name;
+    public string name;
     public float colorHue;
 }
 
@@ -30,36 +30,35 @@ public class PlayerSettings : MonoBehaviour
 
     void Start()
     {
-        //Create JSON
-        mySaveData = new PlayerSaveData();
-        jsonString = JsonUtility.ToJson(mySaveData);
-
         // MyLoadedData();
         playerColorSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
         LoadSettings();
-        MySaveData();
+        MySaveJsonData();
 
     }
 
     public void SavePlayerSettings()
     {
-        //Save Player Name And Update On Screen
-        if (!string.IsNullOrEmpty(playerNameInputField.text))
-        {
-            PlayerPrefs.SetString("pName", "Player");
-            playerName.text = PlayerPrefs.GetString("pName", "Player");
-        }
-        else
-        {
+        // //Save Player Name And Update On Screen
+        // if (!string.IsNullOrEmpty(playerNameInputField.text))
+        // {
+        //     PlayerPrefs.SetString("pName", "Player");
+        //     playerName.text = PlayerPrefs.GetString("pName", "Player");
+        // }
+        // else
+        // {
             PlayerPrefs.SetString("pName", playerNameInputField.text);
             playerName.text = PlayerPrefs.GetString("pName", "Player");
-        }
+        // }
 
         //Save Player Color
         PlayerPrefs.SetFloat(key_sliderColor, playerColorSlider.value);
       
         //Save all to JSON & PlayerPrefs
-
+        //Create JSON
+        mySaveData = new PlayerSaveData();
+        MySaveJsonData();
+        jsonString = JsonUtility.ToJson(mySaveData);
 
     }
 
@@ -79,10 +78,10 @@ public class PlayerSettings : MonoBehaviour
         player.color = Color.HSVToRGB(playerColorSlider.value, 1, 1);
     }
 
-    public void MySaveData()
+    public void MySaveJsonData()
     {
         //Data to be saved
-        mySaveData.Name = PlayerPrefs.GetString("pName");
+        mySaveData.name = PlayerPrefs.GetString("pName");
         mySaveData.colorHue = PlayerPrefs.GetFloat(key_sliderColor);
   
         //Save to string with PlayerPrefs
@@ -109,7 +108,7 @@ public class PlayerSettings : MonoBehaviour
             Debug.Log("Data failed to load, setting default values.");
             
             myLoadedData = new PlayerSaveData();
-            myLoadedData.Name = "Player";
+            myLoadedData.name = "Player";
             myLoadedData.colorHue = 0f;
         }
     }
