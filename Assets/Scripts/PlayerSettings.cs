@@ -1,8 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UIElements;
+
+[Serializable]
+public class PlayerSaveData
+{
+    public string Name;
+    public float colorHue;
+}
 
 public class PlayerSettings : MonoBehaviour
 {
@@ -13,11 +23,22 @@ public class PlayerSettings : MonoBehaviour
     
     public UnityEngine.UI.Slider playerColorSlider;
     public UnityEngine.UI.Image player;
+    
+    //Save JSON
+    public PlayerSaveData mySaveData;
+    public string jsonString;
 
     void Start()
     {
+        //Create JSON
+        mySaveData = new PlayerSaveData();
+        jsonString = JsonUtility.ToJson(mySaveData);
+
+        // MyLoadedData();
         playerColorSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
         LoadSettings();
+        MySaveData();
+
     }
 
     public void SavePlayerSettings()
@@ -33,10 +54,13 @@ public class PlayerSettings : MonoBehaviour
             PlayerPrefs.SetString("pName", playerNameInputField.text);
             playerName.text = PlayerPrefs.GetString("pName", "Player");
         }
-        
-        
+
         //Save Player Color
         PlayerPrefs.SetFloat(key_sliderColor, playerColorSlider.value);
+      
+        //Save all to JSON & PlayerPrefs
+
+
     }
 
     public void ValueChangeCheck()
@@ -55,4 +79,61 @@ public class PlayerSettings : MonoBehaviour
         player.color = Color.HSVToRGB(playerColorSlider.value, 1, 1);
     }
 
+    public void MySaveData()
+    {
+        //Data to be saved
+        mySaveData.Name = PlayerPrefs.GetString("pName");
+        mySaveData.colorHue = PlayerPrefs.GetFloat(key_sliderColor);
+  
+        //Save to string with PlayerPrefs
+        PlayerPrefs.SetString("PlayerSaveData", jsonString);
+        
+        //Save to json.file
+        SaveToFile("SaveData.json", jsonString);
+        
+        Debug.Log("Data saved " + jsonString);
+    }
+
+    public void MyLoadedData()
+    {
+        PlayerSaveData myLoadedData;
+
+        try
+        {
+            myLoadedData = JsonUtility.FromJson<PlayerSaveData>(jsonString);
+            
+            Debug.Log("Data loaded JSON." + jsonString);
+        }
+        catch (Exception)
+        {
+            Debug.Log("Data failed to load, setting default values.");
+            
+            myLoadedData = new PlayerSaveData();
+            myLoadedData.Name = "Player";
+            myLoadedData.colorHue = 0f;
+        }
+    }
+    
+    public void SaveToFile(string fileName, string jsonString)
+    {
+        // Open a file in write mode. This will create the file if it's missing.
+        // It is assumed that the path already exists.
+        using (var stream = File.OpenWrite(fileName))
+        {
+            // Truncate the file if it exists (we want to overwrite the file)
+            stream.SetLength(0);
+
+            // Convert the string into bytes. Assume that the character-encoding is UTF8.
+            // Do you not know what encoding you have? Then you have UTF-8
+            var bytes = Encoding.UTF8.GetBytes(jsonString);
+
+            // Write the bytes to the hard-drive
+            stream.Write(bytes, 0, bytes.Length);
+
+            // The "using" statement will automatically close the stream after we leave
+            // the scope - this is VERY important
+        }
+    }
+    
+    
 }
