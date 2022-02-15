@@ -75,3 +75,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # End of https://www.toptal.com/developers/gitignore/api/unity
+
+Assets/Firebase/Plugins/x86_64/FirebaseCppApp-8_8_0.so
+StreamingAssets/google-services.json
+StreamingAssets/google-services-desktop.json
