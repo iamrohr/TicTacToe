@@ -19,7 +19,7 @@ public class PlayerSettings : MonoBehaviour
     private const string key_sliderColor = "key_sliderColor";
     
     public TextMeshProUGUI playerName;
-    public TextMeshProUGUI playerNameInputField;
+    public TMP_InputField playerNameInputField;
     
     public UnityEngine.UI.Slider playerColorSlider;
     public UnityEngine.UI.Image player;
@@ -39,17 +39,18 @@ public class PlayerSettings : MonoBehaviour
 
     public void SavePlayerSettings()
     {
-        // //Save Player Name And Update On Screen
-        // if (!string.IsNullOrEmpty(playerNameInputField.text))
-        // {
-        //     PlayerPrefs.SetString("pName", "Player");
-        //     playerName.text = PlayerPrefs.GetString("pName", "Player");
-        // }
-        // else
-        // {
+        //Save Player Name And Update On Screen
+        if (string.IsNullOrWhiteSpace(playerNameInputField.text))
+        {
+            Debug.Log("Empty");
+            PlayerPrefs.SetString("pName", "Player");
+            playerName.text = PlayerPrefs.GetString("pName", "Player");
+        }
+        else
+        {
             PlayerPrefs.SetString("pName", playerNameInputField.text);
             playerName.text = PlayerPrefs.GetString("pName", "Player");
-        // }
+        }
 
         //Save Player Color
         PlayerPrefs.SetFloat(key_sliderColor, playerColorSlider.value);
