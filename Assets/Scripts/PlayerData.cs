@@ -10,10 +10,9 @@ using System;
         public string name;
         public float colorHue;
     }
-    
+
 public class PlayerData : MonoBehaviour
 {
-    
     public static UserInfo data; 
     static string userPath;
     
@@ -26,6 +25,7 @@ public class PlayerData : MonoBehaviour
     void OnSignIn()
     {
         userPath = "user/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+        Debug.Log("Innan on load data");
         SaveManager.Instance.LoadData(userPath, OnLoadData);
     }
 

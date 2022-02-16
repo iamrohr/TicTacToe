@@ -18,7 +18,7 @@ public class FirebaseData : MonoBehaviour
                 Debug.LogError(task.Exception);
 
             auth = FirebaseAuth.DefaultInstance;
-            // RegisterNewUser("test1@test.test", "Test123!");
+            // RegisterNewUser("test20@test.test", "Test123!");
             // RegisterNewUser("test2@test.test", "Test123!");
             // RegisterNewUser("test3@test.test", "Test123!");
             // RegisterNewUser("test4@test.test", "Test123!");

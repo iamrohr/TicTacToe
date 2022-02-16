@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
@@ -25,8 +26,8 @@ public class FirebaseLogin : MonoBehaviour
 
     //Delegate
     public delegate void SignInHandler();
-
     public SignInHandler OnSignIn;
+    
     private FirebaseAuth auth;
 
 
@@ -75,6 +76,7 @@ public class FirebaseLogin : MonoBehaviour
 
     private void SignIn(string email, string password)
     {
+        Debug.Log("Sign in i FirebaseLogin.cs");
         auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task =>
         {
             if (task.Exception != null)
@@ -84,6 +86,7 @@ public class FirebaseLogin : MonoBehaviour
             }
             else
             {
+                Debug.Log("I else på FirebaseLogin.cs");
                 SignedIn(task.Result);
             }
         });
@@ -120,6 +123,7 @@ public class FirebaseLogin : MonoBehaviour
         else
             outputText.text = "Logged in as: Anonymous User " + newUser.UserId.Substring(0, 6);
 
+        Debug.Log("INVOKA MIG DÅ!");
         OnSignIn?.Invoke();
     }
 

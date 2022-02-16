@@ -27,9 +27,12 @@ public class SaveManager : MonoBehaviour
         db = FirebaseDatabase.DefaultInstance;
     }
 
+   
     //loads the data at "path" then returns json result to the delegate/callback function
     public void LoadData(string path, OnLoadedDelegate onLoadedDelegate)
     {
+        //Fråga varför vi ej når hit. 
+        Debug.Log("In LoadData");
         db.RootReference.Child(path).GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.Exception != null)
@@ -40,9 +43,9 @@ public class SaveManager : MonoBehaviour
     }
 
     //Save the data at the given path
-    public void SaveData(string path, string data, OnSaveDelegate onSaveDelegate = null)
+    public void SaveData(string path, string jsonData, OnSaveDelegate onSaveDelegate = null)
     {
-        db.RootReference.Child(path).SetRawJsonValueAsync(data).ContinueWithOnMainThread(task =>
+        db.RootReference.Child(path).SetRawJsonValueAsync(jsonData).ContinueWithOnMainThread(task =>
         {
             if (task.Exception != null)
                 Debug.LogWarning(task.Exception);
