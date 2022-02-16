@@ -19,7 +19,7 @@ public class PlayerSettingsLoad : MonoBehaviour
     
     void Start()
     {
-        myLoadData = new PlayerLoadData();
+        // myLoadData = PlayerData.data;
         string loadedString = Load("SaveData.json");
         myLoadData = JsonUtility.FromJson<PlayerLoadData>(loadedString);
     }

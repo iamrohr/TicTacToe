@@ -17,7 +17,7 @@ public class PlayerSettings : MonoBehaviour
 
     void Start()
     {
-        LoadPlayerColor();
+        LoadPlayerSettings();
         playerColorSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
 
     }
@@ -33,28 +33,38 @@ public class PlayerSettings : MonoBehaviour
         //Save Player Name And Update On Screen
         if (string.IsNullOrWhiteSpace(playerNameInputField.text))
         {
-            SaveManager.instance.playerSaveData.name = "Player";
-            SaveManager.instance.Save();
-            playerName.text = SaveManager.instance.playerSaveData.name;
-            Debug.Log("Empty");
- 
+            PlayerData.data.name = "Player";
+            PlayerData.SaveData();
+            // SaveManager.Instance.playerSaveData.name = "Player";
+            // SaveManager.Instance.Save();
+            // playerName.text = SaveManager.Instance.playerSaveData.name;
+            playerName.text = PlayerData.data.name;
         }
         else
         {
-            SaveManager.instance.playerSaveData.name = playerNameInputField.text;
-            SaveManager.instance.Save();
-            playerName.text = SaveManager.instance.playerSaveData.name;
+            PlayerData.data.name = playerNameInputField.text;
+            PlayerData.SaveData();
+            // SaveManager.Instance.playerDa.name = playerNameInputField.text;
+            // SaveManager.Instance.Save();
+            // playerName.text = SaveManager.Instance.playerSaveData.name;
+            playerName.text = PlayerData.data.name;
         }
 
         //Save Player Color
-        SaveManager.instance.playerSaveData.colorHUE = playerColorSlider.value;
-        SaveManager.instance.Save();
+        PlayerData.data.colorHue = playerColorSlider.value;
+        PlayerData.SaveData();
+        // SaveManager.Instance.playerSaveData.colorHUE = playerColorSlider.value;
+        // SaveManager.Instance.Save();
     }
 
-    private void LoadPlayerColor()
+    private void LoadPlayerSettings()
     {
-        playerColorSlider.value = SaveManager.instance.playerSaveData.colorHUE;
+        playerColorSlider.value = PlayerData.data.colorHue;
+        PlayerData.data.name = playerNameInputField.text;
+        // playerColorSlider.value = SaveManager.Instance.playerSaveData.colorHUE;
     }
+    
+    
     
     
 }
