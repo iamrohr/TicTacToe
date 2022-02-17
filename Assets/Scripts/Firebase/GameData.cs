@@ -11,6 +11,7 @@ public class GameData : MonoBehaviour
     public static GameData Instance { get { return _instance; } }
     
     public UserInfo userData;
+    public GameInfo gameData;
     public string userID;
 
     private void Awake()
