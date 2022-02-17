@@ -9,6 +9,8 @@ public class PlayerSettings : MonoBehaviour
     public UnityEngine.UI.Slider playerColorSlider;
     public UnityEngine.UI.Image player;
 
+    private string emptyString = "Player";
+    
     public UserInfo userInfo;
     public GameData gameData;
     
@@ -31,7 +33,6 @@ public class PlayerSettings : MonoBehaviour
         if (string.IsNullOrWhiteSpace(playerNameInputField.text))
         {
             userInfo.name = "Player";
-            // playerName.text = userInfo.name;
         }
         else
         {
@@ -49,6 +50,13 @@ public class PlayerSettings : MonoBehaviour
 
     private void LoadPlayerSettings()
     {
+        if (GameData.Instance.userData.name == "")
+        {
+            playerName.text = playerNameInputField.text = emptyString;
+            GameData.Instance.userData.name = emptyString;
+            GameData.Instance.SaveUserData();
+        }
+        
         playerColorSlider.value =  GameData.Instance.userData.colorHue;
         player.color = Color.HSVToRGB(GameData.Instance.userData.colorHue, 1, 1);
         playerName.text = playerNameInputField.text = GameData.Instance.userData.name;
