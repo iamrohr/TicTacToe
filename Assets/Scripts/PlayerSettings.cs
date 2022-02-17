@@ -1,12 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UIElements;
-
 
 public class PlayerSettings : MonoBehaviour
 {
@@ -16,11 +9,14 @@ public class PlayerSettings : MonoBehaviour
     public UnityEngine.UI.Slider playerColorSlider;
     public UnityEngine.UI.Image player;
 
+    public UserInfo userInfo;
+    public GameData gameData;
+    
     void Start()
     {
         LoadPlayerSettings();
         playerColorSlider.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
-
+        gameData = GameData.Instance;
     }
 
     public void ValueChangeCheck()
@@ -34,39 +30,28 @@ public class PlayerSettings : MonoBehaviour
         //Save Player Name And Update On Screen
         if (string.IsNullOrWhiteSpace(playerNameInputField.text))
         {
-            GameData.Instance.userData.name = "Player";
-            GameData.Instance.SaveUserData();
-            // SaveManager.Instance.playerSaveData.name = "Player";
-            // SaveManager.Instance.Save();
-            // playerName.text = SaveManager.Instance.playerSaveData.name;
-            playerName.text = GameData.Instance.userData.name;
+            userInfo.name = "Player";
+            // playerName.text = userInfo.name;
         }
         else
         {
-            GameData.Instance.userData.name = playerNameInputField.text;
-            GameData.Instance.SaveUserData();
-            // SaveManager.Instance.playerDa.name = playerNameInputField.text;
-            // SaveManager.Instance.Save();
-            // playerName.text = SaveManager.Instance.playerSaveData.name;
-            playerName.text =  GameData.Instance.userData.name;
+            userInfo.name = playerNameInputField.text;
+            playerName.text =  userInfo.name;
         }
 
         //Save Player Color
-        GameData.Instance.userData.colorHue = playerColorSlider.value;
+        userInfo.colorHue = playerColorSlider.value;
+
+        GameData.Instance.userData = userInfo;
+        
         GameData.Instance.SaveUserData();
-        // SaveManager.Instance.playerSaveData.colorHUE = playerColorSlider.value;
-        // SaveManager.Instance.Save();
     }
 
     private void LoadPlayerSettings()
     {
         playerColorSlider.value =  GameData.Instance.userData.colorHue;
-        player.color = Color.HSVToRGB( GameData.Instance.userData.colorHue, 1, 1);
-        playerName.text =  GameData.Instance.userData.name;
-        // playerColorSlider.value = SaveManager.Instance.playerSaveData.colorHUE;
+        player.color = Color.HSVToRGB(GameData.Instance.userData.colorHue, 1, 1);
+        playerName.text = playerNameInputField.text = GameData.Instance.userData.name;
     }
-    
-    
-    
-    
+
 }

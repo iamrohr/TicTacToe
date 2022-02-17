@@ -5,14 +5,6 @@ using Firebase.Auth;
 using System;
 using System.Runtime.CompilerServices;
 using UnityEditor.Build.Content;
-
-[Serializable]
-    public class UserInfo
-    {
-        public string name;
-        public float colorHue;
-    }
-
 public class GameData : MonoBehaviour
 {
     private static GameData _instance;
@@ -40,13 +32,7 @@ public class GameData : MonoBehaviour
         this.userID = userID;
         SaveManager.Instance.LoadData("users/" + userID, OnLoadData);
     }
-
-    // void Start()
-    // {
-    //     FindObjectOfType<FirebaseLogin>().OnSignIn += OnSignIn;
-    //     // userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-    // }
-
+    
     void OnLoadData(string json)
     {
         if (json != null)
