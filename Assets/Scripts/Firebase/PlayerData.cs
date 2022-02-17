@@ -19,11 +19,12 @@ public class PlayerData : MonoBehaviour
     void Start()
     {
         FindObjectOfType<FirebaseLogin>().OnSignIn += OnSignIn;
-        // userPath = "user/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+        // userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
     }
 
     void OnSignIn()
     {
+        Debug.Log("On Sign In Triggered");
         userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
         SaveManager.Instance.LoadData(userPath, OnLoadData);
     }

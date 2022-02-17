@@ -16,7 +16,6 @@ public class SceneManager : MonoBehaviour
 
     void LoadNextScene(int sceneNumber)
     {
-        Debug.Log("Clicked");
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneNumber);
     }
 }

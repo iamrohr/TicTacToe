@@ -31,7 +31,6 @@ public class SaveManager : MonoBehaviour
     //loads the data at "path" then returns json result to the delegate/callback function
     public void LoadData(string path, OnLoadedDelegate onLoadedDelegate)
     {
-        //Fråga varför vi ej når hit. 
         db.RootReference.Child(path).GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.Exception != null)
