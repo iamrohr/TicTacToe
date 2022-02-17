@@ -24,8 +24,7 @@ public class PlayerData : MonoBehaviour
 
     void OnSignIn()
     {
-        userPath = "user/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-        Debug.Log("Innan on load data");
+        userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
         SaveManager.Instance.LoadData(userPath, OnLoadData);
     }
 

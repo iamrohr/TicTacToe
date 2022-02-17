@@ -32,7 +32,6 @@ public class SaveManager : MonoBehaviour
     public void LoadData(string path, OnLoadedDelegate onLoadedDelegate)
     {
         //Fråga varför vi ej når hit. 
-        Debug.Log("In LoadData");
         db.RootReference.Child(path).GetValueAsync().ContinueWithOnMainThread(task =>
         {
             if (task.Exception != null)

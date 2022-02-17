@@ -122,8 +122,7 @@ public class FirebaseLogin : MonoBehaviour
             outputText.text = "logged in as: " + newUser.Email + PlayerData.data;
         else
             outputText.text = "Logged in as: Anonymous User " + newUser.UserId.Substring(0, 6);
-
-        Debug.Log("INVOKA MIG DÅ!");
+        
         OnSignIn?.Invoke();
     }
 
