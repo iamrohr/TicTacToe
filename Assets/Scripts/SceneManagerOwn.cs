@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneManager : MonoBehaviour
+public class SceneManagerOwn : MonoBehaviour
 {
     public Button loadSceneButton;
     public int sceneNumber;

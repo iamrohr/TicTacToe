@@ -12,6 +12,8 @@ public class GameData : MonoBehaviour
     
     public UserInfo userData;
     public GameInfo gameData;
+    public GamePlayer gamePlayer;
+
     public string userID;
 
     private void Awake()

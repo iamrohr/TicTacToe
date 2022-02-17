@@ -1,5 +1,6 @@
 using Firebase.Database;
 using Firebase.Extensions;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SaveManager : MonoBehaviour
@@ -7,12 +8,13 @@ public class SaveManager : MonoBehaviour
     private static SaveManager _instance;
     public static SaveManager Instance { get { return _instance; } }
 
-    public delegate void OnLoadedDelegate(string jsonData);
-    public delegate void OnSaveDelegate();
+	public delegate void OnLoadedDelegateMultiple(List<string> jsonData);
+	public delegate void OnLoadedDelegate(string json);
+	public delegate void OnSaveDelegate();
 
     FirebaseDatabase db;
 
-    private void Awake()
+	private void Awake()
     {
         if (_instance == null)
         {
@@ -27,7 +29,6 @@ public class SaveManager : MonoBehaviour
         db = FirebaseDatabase.DefaultInstance;
     }
 
-   
     //loads the data at "path" then returns json result to the delegate/callback function
     public void LoadData(string path, OnLoadedDelegate onLoadedDelegate)
     {
@@ -40,31 +41,48 @@ public class SaveManager : MonoBehaviour
         });
     }
 
-    //Save the data at the given path
-    public void SaveData(string path, string jsonData, OnSaveDelegate onSaveDelegate = null)
-    {
-        db.RootReference.Child(path).SetRawJsonValueAsync(jsonData).ContinueWithOnMainThread(task =>
-        {
-            if (task.Exception != null)
-                Debug.LogWarning(task.Exception);
+    //public void LoadDataQuery(string path, OnLoadedDelegate onLoadedDelegate)
+    //{
+    //    db.RootReference.Child(path).OrderByChild("numberOfPlayers").GetValueAsync().ContinueWithOnMainThread(task =>
+    //    {
+    //        if (task.Exception != null)
+    //            Debug.LogWarning(task.Exception);
 
-            onSaveDelegate?.Invoke();
-        });
-    }
+    //        onLoadedDelegate(task.Result.GetRawJsonValue());
+    //    });
+    //}
 
-    public void LoadDataMultiple(string path, OnLoadedDelegate onLoadedDelegate)
+
+    //This loads multiple data and returns it as a string list with json.
+    public void LoadData(string path, OnLoadedDelegateMultiple onLoadedDelegates)
     {
         db.RootReference.Child(path).GetValueAsync().ContinueWithOnMainThread(task =>
         {
-            string jsonData = task.Result.GetRawJsonValue();
-
-            if (task.Exception != null)
-                Debug.LogWarning(task.Exception);
+            List<string> loadedJson = new List<string>();
 
             foreach (var item in task.Result.Children)
             {
-                onLoadedDelegate(task.Result.GetRawJsonValue());
+                loadedJson.Add(item.GetRawJsonValue());
             }
+
+            onLoadedDelegates(loadedJson);
         });
+    }
+
+    //Save the data at the given path
+    public void SaveData(string path, string data, OnSaveDelegate onSaveDelegate = null)
+	{
+        db.RootReference.Child(path).SetRawJsonValueAsync(data).ContinueWithOnMainThread(task =>
+        {
+            if (task.Exception != null)
+                Debug.LogWarning(task.Exception);
+
+			onSaveDelegate?.Invoke();
+		});
+	}
+
+	public string GetKey(string path)
+	{
+        return db.RootReference.Child(path).Push().Key;
     }
 }

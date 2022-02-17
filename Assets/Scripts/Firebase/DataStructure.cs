@@ -7,22 +7,24 @@ public class UserInfo
 {
     public string name;
     public float colorHue;
+    public List<string> activeGames;
+
 }
+
 
 [Serializable]
 public class GameInfo
 {
     public string displayName;
     public string gameID;
-    public int numberOfPlayers = 2;
     public int seed;
-    // public List<PlayerInfo> players;
+    public List<GamePlayer> players;
 }
 
 [Serializable]
-public class PlayerGameInfo
+public class GamePlayer
 {
-    public string displayName;
-    // public Vector3 position;
-    public bool hidden;
+    public string userID;
+    public string name;
+    public float colorHue;
 }
