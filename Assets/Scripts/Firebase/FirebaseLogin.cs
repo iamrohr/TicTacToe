@@ -117,13 +117,13 @@ public class FirebaseLogin : MonoBehaviour
 
         //Display who logged in
         if (newUser.DisplayName != "")
-            outputText.text = "Logged in as: " + newUser.DisplayName + PlayerData.data;
+            outputText.text = "Logged in as: " + newUser.DisplayName + GameData.Instance.userID;
         else if (newUser.Email != "")
-            outputText.text = "logged in as: " + newUser.Email + PlayerData.data;
+            outputText.text = "logged in as: " + newUser.Email + GameData.Instance.userID;
         else
             outputText.text = "Logged in as: Anonymous User " + newUser.UserId.Substring(0, 6);
         
-        OnSignIn?.Invoke();
+        GameData.Instance.OnSignIn(newUser.UserId);
     }
 
     public void PlayerDataLoaded()

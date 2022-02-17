@@ -7,6 +7,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UIElements;
 
+
 public class PlayerSettings : MonoBehaviour
 {
     public TextMeshProUGUI playerName;
@@ -33,34 +34,35 @@ public class PlayerSettings : MonoBehaviour
         //Save Player Name And Update On Screen
         if (string.IsNullOrWhiteSpace(playerNameInputField.text))
         {
-            PlayerData.data.name = "Player";
-            PlayerData.SaveData();
+            GameData.Instance.userData.name = "Player";
+            GameData.Instance.SaveUserData();
             // SaveManager.Instance.playerSaveData.name = "Player";
             // SaveManager.Instance.Save();
             // playerName.text = SaveManager.Instance.playerSaveData.name;
-            playerName.text = PlayerData.data.name;
+            playerName.text = GameData.Instance.userData.name;
         }
         else
         {
-            PlayerData.data.name = playerNameInputField.text;
-            PlayerData.SaveData();
+            GameData.Instance.userData.name = playerNameInputField.text;
+            GameData.Instance.SaveUserData();
             // SaveManager.Instance.playerDa.name = playerNameInputField.text;
             // SaveManager.Instance.Save();
             // playerName.text = SaveManager.Instance.playerSaveData.name;
-            playerName.text = PlayerData.data.name;
+            playerName.text =  GameData.Instance.userData.name;
         }
 
         //Save Player Color
-        PlayerData.data.colorHue = playerColorSlider.value;
-        PlayerData.SaveData();
+        GameData.Instance.userData.colorHue = playerColorSlider.value;
+        GameData.Instance.SaveUserData();
         // SaveManager.Instance.playerSaveData.colorHUE = playerColorSlider.value;
         // SaveManager.Instance.Save();
     }
 
     private void LoadPlayerSettings()
     {
-        playerColorSlider.value = PlayerData.data.colorHue;
-        PlayerData.data.name = playerNameInputField.text;
+        playerColorSlider.value =  GameData.Instance.userData.colorHue;
+        player.color = Color.HSVToRGB( GameData.Instance.userData.colorHue, 1, 1);
+        playerName.text =  GameData.Instance.userData.name;
         // playerColorSlider.value = SaveManager.Instance.playerSaveData.colorHUE;
     }
     
