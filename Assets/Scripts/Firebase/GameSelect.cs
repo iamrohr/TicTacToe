@@ -11,8 +11,6 @@ public class GameSelect : MonoBehaviour
 	public Transform gameListHolder;
 	public GameObject gameButtonPrefab;
 
-	public int maxNumberOfButtons = 5;
-
 	private void Start()
 	{
 		UpdateGameList();
@@ -20,6 +18,7 @@ public class GameSelect : MonoBehaviour
 
 	private void UpdateGameList()
 	{
+		Debug.Log("I am in update");
 		//clear/remove the old list, If we have one.
 		foreach (Transform child in gameListHolder)
 			Destroy(child.gameObject);
@@ -33,8 +32,8 @@ public class GameSelect : MonoBehaviour
 		//We have to few games, create a create game button
 		if (GameData.Instance.userData.activeGames.Count < 5)
 		{
-		
-				CreateButton("New Game", () => SaveManager.Instance.LoadData("games/", NewGame));
+			Debug.Log("I Have created a button");
+		    CreateButton("New Game", () => SaveManager.Instance.LoadData("games/", NewGame));
 		}
 	}
 
@@ -50,41 +49,75 @@ public class GameSelect : MonoBehaviour
 		newButton.onClick.AddListener(() => SceneController.Instance.StartGame(gameInfo));
 	}
 
-	private void NewGame(string data)
+	private void NewGame(List<string> data)
 	{
-		if (!(data == "" || data == null))
+
+		List<GameInfo> games = new List<GameInfo>();
+
+		foreach (var gameJson in data)
 		{
-			GameInfo loadedGame = JsonUtility.FromJson<GameInfo>(data);
-			if (!(loadedGame.gameID == "" || data == null))
-			{
-				if (!GameData.Instance.userData.activeGames.Contains(loadedGame.gameID) && loadedGame.openPlayerSlots > 0)
-				{
-					Debug.Log("Joining existing game");
-					JoinGame(loadedGame);
-					return;
-				}
-			}
+			games.Add(JsonUtility.FromJson<GameInfo>(gameJson));
 		}
 
+		foreach (var game in games)
+		{
+			if (!GameData.Instance.userData.activeGames.Contains(game.gameID) && game.openPlayerSlots > 0)
+			{
+				Debug.Log("Joining existing game");
+				JoinGame(game);
+				return;
+			}
+		}
+		
 		CreateGame();
 	}
 	
-	public void JoinGame(GameInfo gameInfo)
+	// public void JoinGame(GameInfo gameInfo)
+	// {
+	// 	Debug.Log("joining game: " + gameInfo.gameID);
+	// 	GameData.Instance.userData.activeGames.Add(gameInfo.gameID);
+	//
+	// 	//save our user with our new game
+	// 	GameData.Instance.SaveUserData();
+	//
+	// 	//Update new game name
+	// 	gameInfo.displayName = gameInfo.players[0].name + " vs " + GameData.Instance.userData.name;
+	// 	string jsonString = JsonUtility.ToJson(gameInfo);
+	//
+	// 	//Update the game
+	// 	SaveManager.Instance.SaveData("games/" + gameInfo.gameID, jsonString);
+	// }
+	
+	void JoinGame(GameInfo gameInfo)
 	{
-		Debug.Log("joining game: " + gameInfo.gameID);
-		GameData.Instance.userData.activeGames.Add(gameInfo.gameID);
-
-		//save our user with our new game
+		//Add this game to our player and save.
 		GameData.Instance.userData.activeGames.Add(gameInfo.gameID);
 		GameData.Instance.SaveUserData();
-
-		//Update new game name
+			//Add our player to the game, update the game name and save.
+		GamePlayer player = new GamePlayer
+		{
+			colorHue = GameData.Instance.userData.colorHue,
+			name = GameData.Instance.userData.name,
+			userID = GameData.Instance.userID
+		};
+		
+		gameInfo.players.Add(player);
+		//Att göra: Create a better naming convention.
 		gameInfo.displayName = gameInfo.players[0].name + " vs " + GameData.Instance.userData.name;
+        
+		gameInfo.openPlayerSlots--;
+		//if (gameInfo.openPlayerSlots == 0)
+		//    gameInfo.gameStatus = GameStatus.closed;
 
-		string jsonString = JsonUtility.ToJson(gameInfo);
+		//Save gameInfo so we can get it in the callback.
+		// tmpGameInfo = gameInfo;
 
-		//Update the game
-		SaveManager.Instance.SaveData("games/" + gameInfo.gameID, jsonString);
+		//Update the game, we have joined
+		string json = JsonUtility.ToJson(gameInfo);
+		SaveManager.Instance.SaveData("games/" + gameInfo.gameID, json);
+		
+		//Att göra load game
+		
 	}
 	
 	
@@ -97,8 +130,18 @@ public class GameSelect : MonoBehaviour
 		newGameInfo.displayName = GameData.Instance.userData.name + "'s game";
 
 		//Add the user as the first player
-		newGameInfo.players = new List<UserInfo>();
-		newGameInfo.players.Add(PlayerData.data);
+		newGameInfo.players = new List<GamePlayer>();
+		
+		GamePlayer player = new GamePlayer
+		{
+			colorHue = GameData.Instance.userData.colorHue,
+			name = GameData.Instance.userData.name,
+			userID = GameData.Instance.userID
+		};
+		
+		newGameInfo.players.Add(player);
+		
+		newGameInfo.openPlayerSlots = 2;
 
 		//get a unique ID for the game
 		string key = SaveManager.Instance.GetKey("games/");

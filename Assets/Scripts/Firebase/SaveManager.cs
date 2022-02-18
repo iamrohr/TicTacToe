@@ -54,6 +54,7 @@ public class SaveManager : MonoBehaviour
 
 
     //This loads multiple data and returns it as a string list with json.
+    
     public void LoadData(string path, OnLoadedDelegateMultiple onLoadedDelegates)
     {
         db.RootReference.Child(path).GetValueAsync().ContinueWithOnMainThread(task =>

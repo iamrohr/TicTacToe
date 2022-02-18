@@ -46,7 +46,6 @@ public class GameData : MonoBehaviour
         //Create user data structure if it doesn't exist
         userData ??= new UserInfo();
         SaveUserData();
-
         FindObjectOfType<FirebaseLogin>()?.PlayerDataLoaded();
     }
 

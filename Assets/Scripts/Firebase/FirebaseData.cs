@@ -63,19 +63,17 @@ public class FirebaseData : MonoBehaviour
             }
         });
     }
-
-
-
+    
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-            AnonymousSignIn();
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-            SignOut();
-        
-        if (Input.GetKeyDown(KeyCode.D))
-            DataTest(auth.CurrentUser.UserId, Random.Range(0, 100).ToString());
+        // if (Input.GetKeyDown(KeyCode.A))
+        //     AnonymousSignIn();
+        //
+        // if (Input.GetKeyDown(KeyCode.Escape))
+        //     SignOut();
+        //
+        // if (Input.GetKeyDown(KeyCode.D))
+        //     DataTest(auth.CurrentUser.UserId, Random.Range(0, 100).ToString());
     }
 
     private void SignOut()
