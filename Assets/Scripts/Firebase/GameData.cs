@@ -12,7 +12,7 @@ public class GameData : MonoBehaviour
     
     public UserInfo userData;
     public GameInfo gameData;
-    public GamePlayer gamePlayerIngame;
+    public GamePlayer gamePlayer;
 
     public string userID;
 
