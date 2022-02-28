@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,9 +30,31 @@ public class GameController : MonoBehaviour
     public Text xPlayerScoreText;
     public Text oPlayerScoreText;
 
+    public GameController gameController;
+    
+    //Wait panel
+    public GameObject waitPanel;
+
     void Start()
     {
         GameSetup();
+       gameController = GetComponent<GameController>();
+       gameController.enabled = false;
+       
+    }
+
+    private void Update()
+    {
+        if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber.Equals(0))
+        {
+            waitPanel.SetActive(false);
+        }
+        if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber.Equals(1))
+        {
+            waitPanel.SetActive(false);
+        }
+  
+        
     }
 
     void GameSetup()
@@ -87,6 +110,8 @@ public class GameController : MonoBehaviour
             turnIcons[0].SetActive(true);
             turnIcons[1].SetActive(false);
         }
+        
+        //Save and update to firebase here
 
     }
 
@@ -169,6 +194,24 @@ public class GameController : MonoBehaviour
         winnerPanel.SetActive(true);
         drawState.SetActive(true);
     }
-    
+
+
+    private static void LoadGameData()
+    {
+  
+    }
+
+    void SaveGameData()
+    {
+        // SaveManager.Instance.SaveData("users/");
+    }
+
+    public void DataToSend()
+    {
+        GameData.Instance.gamePlayer.markedSpacesFB = markedSpaces;
+        GameData.Instance.gamePlayer.turnCountFB = turnCount;
+        GameData.Instance.gamePlayer.whosTurnFB = whoseTurn;
+    }
+
 }
 

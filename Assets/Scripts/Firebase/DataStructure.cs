@@ -23,8 +23,15 @@ public class GameInfo
 [Serializable]
 public class GamePlayer
 {
-    public int whosTurn; //0 starts, 1 second
+ //Loaded color etc 
     public string userID;
     public string name;
     public float colorHue;
+    
+//Game Specific Data     
+    public int playerNumber;
+    public int turnCountFB;
+    public int[] markedSpacesFB;
+    public int whosTurnFB;
+
 }

@@ -100,7 +100,7 @@ public class GameSelect : MonoBehaviour
 			name = GameData.Instance.userData.name,
 			userID = GameData.Instance.userID
 		};
-		
+
 		gameInfo.players.Add(player);
 		//Att göra: Create a better naming convention.
 		gameInfo.displayName = gameInfo.players[0].name + " vs " + GameData.Instance.userData.name;
@@ -113,10 +113,12 @@ public class GameSelect : MonoBehaviour
 		// tmpGameInfo = gameInfo;
 
 		//Update the game, we have joined
+		
 		string json = JsonUtility.ToJson(gameInfo);
 		SaveManager.Instance.SaveData("games/" + gameInfo.gameID, json);
 		
-		//Att göra load game
+		//Load GAme
+		SceneController.Instance.StartGame(gameInfo);
 		
 	}
 	
@@ -140,8 +142,9 @@ public class GameSelect : MonoBehaviour
 		};
 		
 		newGameInfo.players.Add(player);
-		
-		newGameInfo.openPlayerSlots = 2;
+
+		newGameInfo.openPlayerSlots = 1;
+		newGameInfo.players[0].playerNumber = 1;
 
 		//get a unique ID for the game
 		string key = SaveManager.Instance.GetKey("games/");
