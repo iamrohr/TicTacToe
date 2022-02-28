@@ -29,35 +29,9 @@ public class GameController : MonoBehaviour
     public Text xPlayerScoreText;
     public Text oPlayerScoreText;
 
-    public int playerNumber;
     void Start()
     {
         GameSetup();
-        playerNumber = GameData.Instance.gamePlayerIngame.playerNumber;
-        whoseTurn = GameData.Instance.gameData.whosTurnFirebase;
-    }
-
-    void SaveFirebaseGameData()
-    {
-        SaveManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, JsonUtility.ToJson(GameData.Instance.gameData));
-    }
-
-    void SaveLocalPlayerDataToFirebase()
-    {
-        if (playerNumber == 0)
-        {
-            
-        }
-
-        if (playerNumber == 1)
-        {
-            
-        }
-    }
-
-    void LoadFirebaseGameData()
-    {
-        
     }
 
     void GameSetup()
@@ -82,43 +56,39 @@ public class GameController : MonoBehaviour
 
     public void TicTacToeButton(int whichNumber)
     {
-        whoseTurn = GameData.Instance.gameData.whosTurnFirebase;
-        
-        if (whoseTurn == playerNumber)
+        tictactoeSpaces[whichNumber].image.sprite = playIcons[whoseTurn];
+        tictactoeSpaces[whichNumber].interactable = false;
+
+        markedSpaces[whichNumber] = whoseTurn + 1; //sets 1 or 2 instead of 0 and 1 
+        turnCount++;
+
+        if (turnCount > 4)
         {
-            tictactoeSpaces[whichNumber].image.sprite = playIcons[whoseTurn];
-            tictactoeSpaces[whichNumber].interactable = false;
-            markedSpaces[whichNumber] = whoseTurn + 1; //sets 1 or 2 instead of 0 and 1 
-            turnCount++;
-
-            if (turnCount > 4)
-            {
-                bool isWinner = WinnerCheck();
-                
-                if (turnCount == 9 && isWinner == false)
-                {
-                    Draw();
-                }
-            }
+            bool isWinner = WinnerCheck();
             
-
-            if (whoseTurn == 0 && whoseTurn == playerNumber)
+            if (turnCount == 9 && isWinner == false)
             {
-                whoseTurn = 1;
-                
-                turnIcons[0].SetActive(false);
-                turnIcons[1].SetActive(true);
-            }
-            else if (whoseTurn == 1 && whoseTurn == playerNumber)
-            {
-                whoseTurn = 0;
-                
-                turnIcons[0].SetActive(true);
-                turnIcons[1].SetActive(false);
+                Draw();
             }
         }
+        
 
+        if (whoseTurn == 0)
+        {
+            whoseTurn = 1;
+            
+            turnIcons[0].SetActive(false);
+            turnIcons[1].SetActive(true);
         }
+        else
+        {
+            whoseTurn = 0;
+            
+            turnIcons[0].SetActive(true);
+            turnIcons[1].SetActive(false);
+        }
+
+    }
 
     bool WinnerCheck()
     {
