@@ -98,15 +98,12 @@ public class GameSelect : MonoBehaviour
 		{
 			colorHue = GameData.Instance.userData.colorHue,
 			name = GameData.Instance.userData.name,
-			playerNumber = GameData.Instance.gamePlayerIngame.playerNumber,
 			userID = GameData.Instance.userID
 		};
-
-		player.playerNumber = 1;
-
-		gameInfo.playersFirebase.Add(player);
+		
+		gameInfo.players.Add(player);
 		//Att göra: Create a better naming convention.
-		gameInfo.displayName = gameInfo.playersFirebase[0].name + " vs " + GameData.Instance.userData.name;
+		gameInfo.displayName = gameInfo.players[0].name + " vs " + GameData.Instance.userData.name;
         
 		gameInfo.openPlayerSlots--;
 		//if (gameInfo.openPlayerSlots == 0)
@@ -128,24 +125,21 @@ public class GameSelect : MonoBehaviour
 	{
 		//Create a new game and start filling out the info.
 		var newGameInfo = new GameInfo();
-		
+
 		newGameInfo.seed = Random.Range(0, int.MaxValue);
 		newGameInfo.displayName = GameData.Instance.userData.name + "'s game";
 
 		//Add the user as the first player
-		newGameInfo.playersFirebase = new List<GamePlayer>();
+		newGameInfo.players = new List<GamePlayer>();
 		
 		GamePlayer player = new GamePlayer
 		{
 			colorHue = GameData.Instance.userData.colorHue,
 			name = GameData.Instance.userData.name,
-			playerNumber = GameData.Instance.gamePlayerIngame.playerNumber,
 			userID = GameData.Instance.userID
 		};
-
-		player.playerNumber = 0;
 		
-		newGameInfo.playersFirebase.Add(player);
+		newGameInfo.players.Add(player);
 		
 		newGameInfo.openPlayerSlots = 2;
 
@@ -188,7 +182,7 @@ public class GameSelect : MonoBehaviour
 		foreach (var activeGame in games)
 		{
 			//Don't list our own games or full games.
-			if (GameData.Instance.userData.activeGames.Contains(activeGame.gameID) || activeGame.playersFirebase.Count > 1)
+			if (GameData.Instance.userData.activeGames.Contains(activeGame.gameID) || activeGame.players.Count > 1)
 				continue;
 			
 			JoinGame(activeGame);

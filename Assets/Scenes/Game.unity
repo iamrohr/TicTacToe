@@ -3566,7 +3566,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e406d8399e007948a5f38fde92654e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whosTurn: 2
+  whoseTurn: 0
   turnCount: 0
   turnIcons:
   - {fileID: 1637811590}
@@ -3602,8 +3602,6 @@ MonoBehaviour:
   oPlayerScore: 0
   xPlayerScoreText: {fileID: 807051648}
   oPlayerScoreText: {fileID: 452425935}
-  playerTurnNumber: 0
-  gameTurn: 0
 --- !u!4 &2124981220
 Transform:
   m_ObjectHideFlags: 0
