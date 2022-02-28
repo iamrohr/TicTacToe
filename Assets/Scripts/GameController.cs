@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Firebase.Database;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -37,24 +38,53 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        GameSetup();
-       gameController = GetComponent<GameController>();
-       gameController.enabled = false;
-       
+       GameSetup();
+     
+       //Listener varje gång kommer den uppdatera. Delegate.
+       FirebaseDatabase.DefaultInstance.RootReference.Child("games/").Child(GameData.Instance.gameData.gameID).ValueChanged += CheckIfChangesInGameHappens;
+    }
+
+    //kollar om ändringar hänt
+    void CheckIfChangesInGameHappens(object sender, ValueChangedEventArgs args)
+    {
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message);
+            return;
+        }
+
+        GameInfo gameInfo = JsonUtility.FromJson<GameInfo>(args.Snapshot.GetRawJsonValue());
+
+        try
+        {
+            GameData.Instance.gameData = gameInfo;
+        }
+        catch
+        {
+            
+        }
     }
 
     private void Update()
     {
-        if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber.Equals(0))
-        {
-            waitPanel.SetActive(false);
-        }
-        if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber.Equals(1))
-        {
-            waitPanel.SetActive(false);
-        }
-  
+        //Metod ladda uppdaterad data och spara lokalt. 
+        // Uppdatera gameplayer från FB. Data från spelet och sätt det med player data så att du vet vilken spelare du är. Lokalt. 
+        if (GameData.Instance.gameData.players[0].userID == GameData.Instance.userID)
+            GameData.Instance.gamePlayer = GameData.Instance.gameData.players[0];
+        else if (GameData.Instance.gameData.players[1].userID == GameData.Instance.userID)
+            GameData.Instance.gamePlayer = GameData.Instance.gameData.players[1];
         
+        //Egen metod som kollar vems tur. 
+        //Bryta ut till egen funktion?
+        if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber == 0)
+        {
+            waitPanel.SetActive(false);
+        }
+        if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber == 1)
+        {
+            waitPanel.SetActive(false);
+        }
+
     }
 
     void GameSetup()
@@ -111,8 +141,16 @@ public class GameController : MonoBehaviour
             turnIcons[1].SetActive(false);
         }
         
-        //Save and update to firebase here
-
+        //Kanske byta ut till FB direkt och inte ha 2 olika. Arbeta med Singelton istället för ny. 
+        GameData.Instance.gameData.markedSpacesFB = markedSpaces;
+        GameData.Instance.gameData.turnCountFB = turnCount;
+        GameData.Instance.gameData.whosTurnFB = whoseTurn;
+        //Ta user detta från detta gamet. Gör till en json string och skicka in i save manager och spara på FB. 
+        string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
+        SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
+        
+        //Inactivate game
+        waitPanel.SetActive(true);
     }
 
     bool WinnerCheck()
@@ -198,7 +236,7 @@ public class GameController : MonoBehaviour
 
     private static void LoadGameData()
     {
-  
+    
     }
 
     void SaveGameData()
@@ -208,9 +246,9 @@ public class GameController : MonoBehaviour
 
     public void DataToSend()
     {
-        GameData.Instance.gamePlayer.markedSpacesFB = markedSpaces;
-        GameData.Instance.gamePlayer.turnCountFB = turnCount;
-        GameData.Instance.gamePlayer.whosTurnFB = whoseTurn;
+        GameData.Instance.gameData.markedSpacesFB = markedSpaces;
+        GameData.Instance.gameData.turnCountFB = turnCount;
+        GameData.Instance.gameData.whosTurnFB = whoseTurn;
     }
 
 }

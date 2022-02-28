@@ -33,17 +33,18 @@ public class GameData : MonoBehaviour
     {
         //Try to load user data
         this.userID = userID;
-        SaveManager.Instance.LoadData("users/" + userID, OnLoadData);
+        SaveAndLoadManager.Instance.LoadData("users/" + userID, OnLoadData);
     }
     
     void OnLoadData(string json)
     {
         if (json != null)
         {
+            //Updates data for user, name and active games etc
             userData = JsonUtility.FromJson<UserInfo>(json);
         }
 
-        //Create user data structure if it doesn't exist
+        //If user Empty, Create new user with "base" values.
         userData ??= new UserInfo();
         SaveUserData();
         FindObjectOfType<FirebaseLogin>()?.PlayerDataLoaded();
@@ -52,7 +53,7 @@ public class GameData : MonoBehaviour
     public void SaveUserData()
     {
         userID = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-        SaveManager.Instance.SaveData("users/" + this.userID, JsonUtility.ToJson(userData));
+        SaveAndLoadManager.Instance.SaveData("users/" + this.userID, JsonUtility.ToJson(userData));
     }
     
 }

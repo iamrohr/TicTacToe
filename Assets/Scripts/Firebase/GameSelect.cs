@@ -26,14 +26,14 @@ public class GameSelect : MonoBehaviour
 		//create new list, load each of the users active games
 		foreach (string gameID in GameData.Instance.userData.activeGames)
 		{
-			SaveManager.Instance.LoadData("games/" + gameID, LoadGameInfo);
+			SaveAndLoadManager.Instance.LoadData("games/" + gameID, LoadGameInfo);
 		}
 
 		//We have to few games, create a create game button
 		if (GameData.Instance.userData.activeGames.Count < 5)
 		{
 			Debug.Log("I Have created a button");
-		    CreateButton("New Game", () => SaveManager.Instance.LoadData("games/", NewGame));
+		    CreateButton("New Game", () => SaveAndLoadManager.Instance.LoadData("games/", NewGame));
 		}
 	}
 
@@ -72,22 +72,6 @@ public class GameSelect : MonoBehaviour
 		CreateGame();
 	}
 	
-	// public void JoinGame(GameInfo gameInfo)
-	// {
-	// 	Debug.Log("joining game: " + gameInfo.gameID);
-	// 	GameData.Instance.userData.activeGames.Add(gameInfo.gameID);
-	//
-	// 	//save our user with our new game
-	// 	GameData.Instance.SaveUserData();
-	//
-	// 	//Update new game name
-	// 	gameInfo.displayName = gameInfo.players[0].name + " vs " + GameData.Instance.userData.name;
-	// 	string jsonString = JsonUtility.ToJson(gameInfo);
-	//
-	// 	//Update the game
-	// 	SaveManager.Instance.SaveData("games/" + gameInfo.gameID, jsonString);
-	// }
-	
 	void JoinGame(GameInfo gameInfo)
 	{
 		//Add this game to our player and save.
@@ -115,9 +99,9 @@ public class GameSelect : MonoBehaviour
 		//Update the game, we have joined
 		
 		string json = JsonUtility.ToJson(gameInfo);
-		SaveManager.Instance.SaveData("games/" + gameInfo.gameID, json);
+		SaveAndLoadManager.Instance.SaveData("games/" + gameInfo.gameID, json);
 		
-		//Load GAme
+		//Load Game
 		SceneController.Instance.StartGame(gameInfo);
 		
 	}
@@ -147,7 +131,7 @@ public class GameSelect : MonoBehaviour
 		newGameInfo.players[0].playerNumber = 1;
 
 		//get a unique ID for the game
-		string key = SaveManager.Instance.GetKey("games/");
+		string key = SaveAndLoadManager.Instance.GetKey("games/");
 		newGameInfo.gameID = key;
 
 		//convert to json
@@ -155,7 +139,7 @@ public class GameSelect : MonoBehaviour
 
 		//Save our new game
 		string path = "games/" + key;
-		SaveManager.Instance.SaveData(path, data);
+		SaveAndLoadManager.Instance.SaveData(path, data);
 
 		//add the key to our active games
 		GameCreated(key, newGameInfo);

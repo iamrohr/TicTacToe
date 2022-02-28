@@ -18,6 +18,11 @@ public class GameInfo
     public int seed;
     public int openPlayerSlots;
     public List<GamePlayer> players;
+
+    //Game playing info
+    public int whosTurnFB;
+    public int turnCountFB;
+    public int[] markedSpacesFB;
 }
 
 [Serializable]
@@ -28,10 +33,7 @@ public class GamePlayer
     public string name;
     public float colorHue;
     
-//Game Specific Data     
+//Game Specific Data for player      
     public int playerNumber;
-    public int turnCountFB;
-    public int[] markedSpacesFB;
-    public int whosTurnFB;
-
+    
 }

@@ -3,10 +3,10 @@ using Firebase.Extensions;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SaveManager : MonoBehaviour
+public class SaveAndLoadManager : MonoBehaviour
 {
-    private static SaveManager _instance;
-    public static SaveManager Instance { get { return _instance; } }
+    private static SaveAndLoadManager _instance;
+    public static SaveAndLoadManager Instance { get { return _instance; } }
 
 	public delegate void OnLoadedDelegateMultiple(List<string> jsonData);
 	public delegate void OnLoadedDelegate(string json);
