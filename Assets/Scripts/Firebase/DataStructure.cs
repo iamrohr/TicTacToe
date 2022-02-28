@@ -17,14 +17,17 @@ public class GameInfo
     public string gameID;
     public int seed;
     public int openPlayerSlots;
-    public List<GamePlayer> players;
+    public int whosTurnFirebase;
+    public int[] markedSpacesFirebase;
+    public List<GamePlayer> playersFirebase;
 }
 
 [Serializable]
 public class GamePlayer
 {
-    public int whosTurn; //0 starts, 1 second
+    // public int whosTurn; //0 starts, 1 second
     public string userID;
     public string name;
     public float colorHue;
+    public int playerNumber;
 }
