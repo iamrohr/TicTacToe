@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
     public int turnCount; //Number of turns played
     public GameObject[] turnIcons; // Displays whos turn it is
     public int[] markedSpaces; //ID's which space that was marked by which player
-
+    
     //Graphics
     public Sprite[] playIcons; //0 = x and 1 = O
     public Button[] tictactoeSpaces;
@@ -38,14 +38,10 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        if (GameData.Instance.gameData.setupGameFB)
-        {
-            GameSetup();
-        }
+       GameSetup();
      
        //Listener varje gång kommer den uppdatera. Delegate.
        FirebaseDatabase.DefaultInstance.RootReference.Child("games/").Child(GameData.Instance.gameData.gameID).ValueChanged += CheckIfChangesInGameHappens;
-       
     }
 
     //kollar om ändringar hänt
@@ -62,9 +58,6 @@ public class GameController : MonoBehaviour
         try
         {
             GameData.Instance.gameData = gameInfo;
-            turnCount = gameInfo.turnCountFB;
-            markedSpaces = gameInfo.markedSpacesFB;
-            whoseTurn = gameInfo.whosTurnFB;
         }
         catch
         {
@@ -112,8 +105,6 @@ public class GameController : MonoBehaviour
         {
             markedSpaces[i] = -100;
         }
-
-        GameData.Instance.gameData.setupGameFB = false;
     }
 
     public void TicTacToeButton(int whichNumber)
@@ -141,7 +132,6 @@ public class GameController : MonoBehaviour
             
             turnIcons[0].SetActive(false);
             turnIcons[1].SetActive(true);
-            
         }
         else
         {
@@ -243,11 +233,23 @@ public class GameController : MonoBehaviour
         drawState.SetActive(true);
     }
 
-    void CheckAllSpacesAndMark()
+
+    private static void LoadGameData()
     {
-        
+    
     }
 
-    
+    void SaveGameData()
+    {
+        // SaveManager.Instance.SaveData("users/");
+    }
+
+    public void DataToSend()
+    {
+        GameData.Instance.gameData.markedSpacesFB = markedSpaces;
+        GameData.Instance.gameData.turnCountFB = turnCount;
+        GameData.Instance.gameData.whosTurnFB = whoseTurn;
+    }
+
 }
 
