@@ -69,7 +69,6 @@ public class GameController : MonoBehaviour
             markedSpaces = gameInfo.markedSpacesFB;
             turnCount = gameInfo.turnCountFB;
             whoseTurn = gameInfo.whosTurnFB;
-            
         }
         catch
         {
