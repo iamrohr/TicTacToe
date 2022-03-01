@@ -36,11 +36,17 @@ public class GameController : MonoBehaviour
     //Wait panel
     public GameObject waitPanel;
 
+    public bool setupGame;
+
     void Start()
     {
-       GameSetup();
-     
-       //Listener varje gång kommer den uppdatera. Delegate.
+         
+        if (setupGame)
+        {
+            GameSetup();
+        }
+
+        //Listener varje gång kommer den uppdatera. Delegate.
        FirebaseDatabase.DefaultInstance.RootReference.Child("games/").Child(GameData.Instance.gameData.gameID).ValueChanged += CheckIfChangesInGameHappens;
     }
 
@@ -53,11 +59,17 @@ public class GameController : MonoBehaviour
             return;
         }
 
+        //Konverterar till game info.
         GameInfo gameInfo = JsonUtility.FromJson<GameInfo>(args.Snapshot.GetRawJsonValue());
 
         try
         {
             GameData.Instance.gameData = gameInfo;
+            
+            markedSpaces = gameInfo.markedSpacesFB;
+            turnCount = gameInfo.turnCountFB;
+            whoseTurn = gameInfo.whosTurnFB;
+            
         }
         catch
         {
@@ -84,6 +96,8 @@ public class GameController : MonoBehaviour
         {
             waitPanel.SetActive(false);
         }
+        
+        CheckButtons();
 
     }
 
@@ -105,6 +119,8 @@ public class GameController : MonoBehaviour
         {
             markedSpaces[i] = -100;
         }
+
+        setupGame = false;
     }
 
     public void TicTacToeButton(int whichNumber)
@@ -249,6 +265,22 @@ public class GameController : MonoBehaviour
         GameData.Instance.gameData.markedSpacesFB = markedSpaces;
         GameData.Instance.gameData.turnCountFB = turnCount;
         GameData.Instance.gameData.whosTurnFB = whoseTurn;
+    }
+    
+    void CheckButtons()
+    {
+        //TL
+        if (GameData.Instance.gameData.markedSpacesFB[1] == 1)
+        {
+            tictactoeSpaces[1].image.sprite = playIcons[1];
+            tictactoeSpaces[1].interactable = false;
+        }
+        if (GameData.Instance.gameData.markedSpacesFB[1] == 2)
+        {
+            tictactoeSpaces[1].image.sprite = playIcons[2];
+            tictactoeSpaces[1].interactable = false;
+        }
+        
     }
 
 }
