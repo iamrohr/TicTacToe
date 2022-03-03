@@ -303,13 +303,13 @@ public class GameController : MonoBehaviour
         //TL
         if (markedSpaces[0] == 1)
         {
-            tictactoeSpaces[0].image.sprite = playIcons[1];
+            tictactoeSpaces[0].image.sprite = playIcons[0];
             tictactoeSpaces[0].interactable = false;
             Debug.Log("Made an O");
         }
         if (markedSpaces[0] == 2)
         {
-            tictactoeSpaces[0].image.sprite = playIcons[2];
+            tictactoeSpaces[0].image.sprite = playIcons[1];
             tictactoeSpaces[0].interactable = false;
             Debug.Log("Made an X");
         }
@@ -317,13 +317,13 @@ public class GameController : MonoBehaviour
         //M
         if (markedSpaces[1] == 1)
         {
-            tictactoeSpaces[1].image.sprite = playIcons[1];
+            tictactoeSpaces[1].image.sprite = playIcons[0];
             tictactoeSpaces[1].interactable = false;
             Debug.Log("Made an O");
         }
         if (markedSpaces[1] == 2)
         {
-            tictactoeSpaces[1].image.sprite = playIcons[2];
+            tictactoeSpaces[1].image.sprite = playIcons[1];
             tictactoeSpaces[1].interactable = false;
             Debug.Log("Made an X");
         }
@@ -331,13 +331,13 @@ public class GameController : MonoBehaviour
         //TR
         if (markedSpaces[3] == 1)
         {
-            tictactoeSpaces[3].image.sprite = playIcons[1];
+            tictactoeSpaces[3].image.sprite = playIcons[0];
             tictactoeSpaces[3].interactable = false;
             Debug.Log("Made an O");
         }
         if (markedSpaces[3] == 2)
         {
-            tictactoeSpaces[3].image.sprite = playIcons[2];
+            tictactoeSpaces[3].image.sprite = playIcons[1];
             tictactoeSpaces[3].interactable = false;
             Debug.Log("Made an X");
         }
@@ -345,13 +345,13 @@ public class GameController : MonoBehaviour
         //ML
         if (markedSpaces[4] == 1)
         {
-            tictactoeSpaces[4].image.sprite = playIcons[1];
+            tictactoeSpaces[4].image.sprite = playIcons[0];
             tictactoeSpaces[4].interactable = false;
             Debug.Log("Made an O");
         }
         if (markedSpaces[4] == 2)
         {
-            tictactoeSpaces[4].image.sprite = playIcons[2];
+            tictactoeSpaces[4].image.sprite = playIcons[1];
             tictactoeSpaces[4].interactable = false;
             Debug.Log("Made an X");
         }
@@ -359,13 +359,13 @@ public class GameController : MonoBehaviour
         //MM
         if (markedSpaces[5] == 1)
         {
-            tictactoeSpaces[5].image.sprite = playIcons[1];
+            tictactoeSpaces[5].image.sprite = playIcons[0];
             tictactoeSpaces[5].interactable = false;
             Debug.Log("Made an O");
         }
         if (markedSpaces[5] == 2)
         {
-            tictactoeSpaces[5].image.sprite = playIcons[2];
+            tictactoeSpaces[5].image.sprite = playIcons[1];
             tictactoeSpaces[5].interactable = false;
             Debug.Log("Made an X");
         }
@@ -373,13 +373,13 @@ public class GameController : MonoBehaviour
         //MR
         if (markedSpaces[6] == 1)
         {
-            tictactoeSpaces[6].image.sprite = playIcons[1];
+            tictactoeSpaces[6].image.sprite = playIcons[0];
             tictactoeSpaces[6].interactable = false;
             Debug.Log("Made an O");
         }
         if (markedSpaces[6] == 2)
         {
-            tictactoeSpaces[6].image.sprite = playIcons[2];
+            tictactoeSpaces[6].image.sprite = playIcons[1];
             tictactoeSpaces[6].interactable = false;
             Debug.Log("Made an X");
         }
@@ -387,13 +387,13 @@ public class GameController : MonoBehaviour
         //BL
         if (markedSpaces[7] == 1)
         {
-            tictactoeSpaces[7].image.sprite = playIcons[1];
+            tictactoeSpaces[7].image.sprite = playIcons[0];
             tictactoeSpaces[7].interactable = false;
             Debug.Log("Made an O");
         }
         if (markedSpaces[7] == 2)
         {
-            tictactoeSpaces[7].image.sprite = playIcons[2];
+            tictactoeSpaces[7].image.sprite = playIcons[1];
             tictactoeSpaces[7].interactable = false;
             Debug.Log("Made an X");
         }
@@ -401,13 +401,13 @@ public class GameController : MonoBehaviour
         //BM
         if (markedSpaces[8] == 1)
         {
-            tictactoeSpaces[8].image.sprite = playIcons[1];
+            tictactoeSpaces[8].image.sprite = playIcons[0];
             tictactoeSpaces[8].interactable = false;
             Debug.Log("Made an O");
         }
         if (markedSpaces[8] == 2)
         {
-            tictactoeSpaces[8].image.sprite = playIcons[2];
+            tictactoeSpaces[8].image.sprite = playIcons[1];
             tictactoeSpaces[8].interactable = false;
             Debug.Log("Made an X");
         }
