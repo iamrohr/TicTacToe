@@ -48,6 +48,12 @@ public class GameController : MonoBehaviour
             GameSetup();
         }
         
+        whoseTurn = GameData.Instance.gameData.whosTurnFB;
+        turnCount = GameData.Instance.gameData.turnCountFB;
+        markedSpaces = GameData.Instance.gameData.markedSpacesFB;
+
+        //Updates the playing field visually
+        CheckButtons();
         //Identify player and update local player data
         UpdateLocalPlayerData();
         //Check whos turn it is and deactivate panel etc etc
@@ -72,10 +78,10 @@ public class GameController : MonoBehaviour
         try
         {
             GameData.Instance.gameData = gameInfo;
-            
-            markedSpaces = gameInfo.markedSpacesFB;
-            turnCount = gameInfo.turnCountFB;
+
             whoseTurn = gameInfo.whosTurnFB;
+            turnCount = gameInfo.turnCountFB;
+            markedSpaces = gameInfo.markedSpacesFB;
         }
         catch
         {
@@ -184,7 +190,7 @@ public class GameController : MonoBehaviour
         
         
         //Ta user data från detta gamet. Gör till en json string och skicka in i save manager och spara på FB. 
-        string jSon = JsonUtility.ToJson(GameData.Instance);
+        string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
         SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
         
         
@@ -292,16 +298,118 @@ public class GameController : MonoBehaviour
     
     void CheckButtons()
     {
+        Debug.Log("Checking buttons");
+        
         //TL
-        if (GameData.Instance.gameData.markedSpacesFB[1] == 1)
+        if (markedSpaces[0] == 1)
+        {
+            tictactoeSpaces[0].image.sprite = playIcons[1];
+            tictactoeSpaces[0].interactable = false;
+            Debug.Log("Made an O");
+        }
+        if (markedSpaces[0] == 2)
+        {
+            tictactoeSpaces[0].image.sprite = playIcons[2];
+            tictactoeSpaces[0].interactable = false;
+            Debug.Log("Made an X");
+        }
+        
+        //M
+        if (markedSpaces[1] == 1)
         {
             tictactoeSpaces[1].image.sprite = playIcons[1];
             tictactoeSpaces[1].interactable = false;
+            Debug.Log("Made an O");
         }
-        if (GameData.Instance.gameData.markedSpacesFB[1] == 2)
+        if (markedSpaces[1] == 2)
         {
             tictactoeSpaces[1].image.sprite = playIcons[2];
             tictactoeSpaces[1].interactable = false;
+            Debug.Log("Made an X");
+        }
+        
+        //TR
+        if (markedSpaces[3] == 1)
+        {
+            tictactoeSpaces[3].image.sprite = playIcons[1];
+            tictactoeSpaces[3].interactable = false;
+            Debug.Log("Made an O");
+        }
+        if (markedSpaces[3] == 2)
+        {
+            tictactoeSpaces[3].image.sprite = playIcons[2];
+            tictactoeSpaces[3].interactable = false;
+            Debug.Log("Made an X");
+        }
+        
+        //ML
+        if (markedSpaces[4] == 1)
+        {
+            tictactoeSpaces[4].image.sprite = playIcons[1];
+            tictactoeSpaces[4].interactable = false;
+            Debug.Log("Made an O");
+        }
+        if (markedSpaces[4] == 2)
+        {
+            tictactoeSpaces[4].image.sprite = playIcons[2];
+            tictactoeSpaces[4].interactable = false;
+            Debug.Log("Made an X");
+        }
+        
+        //MM
+        if (markedSpaces[5] == 1)
+        {
+            tictactoeSpaces[5].image.sprite = playIcons[1];
+            tictactoeSpaces[5].interactable = false;
+            Debug.Log("Made an O");
+        }
+        if (markedSpaces[5] == 2)
+        {
+            tictactoeSpaces[5].image.sprite = playIcons[2];
+            tictactoeSpaces[5].interactable = false;
+            Debug.Log("Made an X");
+        }
+        
+        //MR
+        if (markedSpaces[6] == 1)
+        {
+            tictactoeSpaces[6].image.sprite = playIcons[1];
+            tictactoeSpaces[6].interactable = false;
+            Debug.Log("Made an O");
+        }
+        if (markedSpaces[6] == 2)
+        {
+            tictactoeSpaces[6].image.sprite = playIcons[2];
+            tictactoeSpaces[6].interactable = false;
+            Debug.Log("Made an X");
+        }
+        
+        //BL
+        if (markedSpaces[7] == 1)
+        {
+            tictactoeSpaces[7].image.sprite = playIcons[1];
+            tictactoeSpaces[7].interactable = false;
+            Debug.Log("Made an O");
+        }
+        if (markedSpaces[7] == 2)
+        {
+            tictactoeSpaces[7].image.sprite = playIcons[2];
+            tictactoeSpaces[7].interactable = false;
+            Debug.Log("Made an X");
+        }
+        
+        //BM
+        if (markedSpaces[8] == 1)
+        {
+            tictactoeSpaces[8].image.sprite = playIcons[1];
+            tictactoeSpaces[8].interactable = false;
+            Debug.Log("Made an O");
+        }
+        if (markedSpaces[8] == 2)
+        {
+            tictactoeSpaces[8].image.sprite = playIcons[2];
+            tictactoeSpaces[8].interactable = false;
+            Debug.Log("Made an X");
         }
         
     }

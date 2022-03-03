@@ -34,6 +34,8 @@ public class FirebaseLogin : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        FirebaseDatabase.DefaultInstance.SetPersistenceEnabled(false);
+        
         //Tun first scene
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {

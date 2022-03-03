@@ -75,6 +75,8 @@ public class GameSelect : MonoBehaviour
 	void JoinGame(GameInfo gameInfo)
 	{
 		//Add this game to our player and save.
+		// if (gameInfo.openPlayerSlots >= 1)
+		// {
 		GameData.Instance.userData.activeGames.Add(gameInfo.gameID);
 		GameData.Instance.SaveUserData();
 			//Add our player to the game, update the game name and save.
@@ -85,14 +87,16 @@ public class GameSelect : MonoBehaviour
 			userID = GameData.Instance.userID
 		};
 
-		gameInfo.players.Add(player);
-		//Att göra: Create a better naming convention.
-		gameInfo.displayName = gameInfo.players[0].name + " vs " + GameData.Instance.userData.name;
-        
-		gameInfo.openPlayerSlots--;
 
-		string json = JsonUtility.ToJson(gameInfo);
-		SaveAndLoadManager.Instance.SaveData("games/" + gameInfo.gameID, json);
+			gameInfo.players.Add(player);
+			//Att göra: Create a better naming convention.
+			gameInfo.displayName = gameInfo.players[0].name + " vs " + GameData.Instance.userData.name;
+
+			gameInfo.openPlayerSlots--;
+			
+			string json = JsonUtility.ToJson(gameInfo);
+			SaveAndLoadManager.Instance.SaveData("games/" + gameInfo.gameID, json);
+		// }
 		
 		//Load Game
 		SceneController.Instance.StartGame(gameInfo);
