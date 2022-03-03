@@ -90,14 +90,7 @@ public class GameSelect : MonoBehaviour
 		gameInfo.displayName = gameInfo.players[0].name + " vs " + GameData.Instance.userData.name;
         
 		gameInfo.openPlayerSlots--;
-		//if (gameInfo.openPlayerSlots == 0)
-		//    gameInfo.gameStatus = GameStatus.closed;
 
-		//Save gameInfo so we can get it in the callback.
-		// tmpGameInfo = gameInfo;
-
-		//Update the game, we have joined
-		
 		string json = JsonUtility.ToJson(gameInfo);
 		SaveAndLoadManager.Instance.SaveData("games/" + gameInfo.gameID, json);
 		

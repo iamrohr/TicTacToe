@@ -23,7 +23,7 @@ public class GameInfo
     public int whosTurnFB;
     public int turnCountFB;
     public int[] markedSpacesFB;
-    public bool setupGameFB = true;
+    public bool setupGameFB;
 }
 
 [Serializable]

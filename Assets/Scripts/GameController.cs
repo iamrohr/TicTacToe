@@ -31,6 +31,7 @@ public class GameController : MonoBehaviour
     public int oPlayerScore;
     public Text xPlayerScoreText;
     public Text oPlayerScoreText;
+    public bool setupGame;
 
     public GameController gameController;
     
@@ -42,12 +43,12 @@ public class GameController : MonoBehaviour
     {
         
          //Om spelet körs första gången kör GameSetup
-        if (GameData.Instance.gameData.setupGameFB)
+        if (!GameData.Instance.gameData.setupGameFB)
         {
             GameSetup();
         }
-
-
+        
+        //Identify player and update local player data
         UpdateLocalPlayerData();
         //Check whos turn it is and deactivate panel etc etc
         WhosTurnFunction();
@@ -127,7 +128,19 @@ public class GameController : MonoBehaviour
             markedSpaces[i] = -100;
         }
 
-        GameData.Instance.gameData.setupGameFB = false;
+        setupGame = true;
+        
+        GameData.Instance.gameData.setupGameFB = setupGame;
+        //Kanske byta ut till FB direkt och inte ha 2 olika. Arbeta med Singelton istället för ny. 
+        GameData.Instance.gameData.markedSpacesFB = markedSpaces;
+        GameData.Instance.gameData.turnCountFB = turnCount;
+        GameData.Instance.gameData.whosTurnFB = whoseTurn;
+
+        string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
+        SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
+        
+        Debug.Log("I have run setup");
+
     }
 
     public void TicTacToeButton(int whichNumber)
@@ -172,7 +185,7 @@ public class GameController : MonoBehaviour
         
         //Ta user data från detta gamet. Gör till en json string och skicka in i save manager och spara på FB. 
         string jSon = JsonUtility.ToJson(GameData.Instance);
-        SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.whosTurnFB, jSon);
+        SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
         
         
         //Inactivate game
