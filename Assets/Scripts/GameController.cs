@@ -87,6 +87,11 @@ public class GameController : MonoBehaviour
             CheckButtons();
             //Check whos turn it is and deactivate panel etc etc
             WhosTurnFunction();
+            
+            if (GameData.Instance.gameData.winnerCheckFB)
+            {
+                WinnerDisplay(GameData.Instance.gameData.winnerNumberFB);
+            }
         }
         catch
         {
@@ -226,24 +231,32 @@ public class GameController : MonoBehaviour
             if (solutions[i] == 3 * (whoseTurn + 1))
             {
                 WinnerDisplay(i);
+                GameData.Instance.gameData.winnerNumberFB = i;
+                GameData.Instance.gameData.winnerCheckFB = true;
+                string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
+                SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
                 return true;
             }
         }
         return false;
     }
+    
 
     void WinnerDisplay(int indexIn)
     {
-        if (whoseTurn == 0)
+        if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber == 0)
         {
+            CheckButtons();
             xPlayerScore++;
             xPlayerScoreText.text = xPlayerScore.ToString();
             
             winnerPanel.gameObject.SetActive(true);
             winnerTextX.gameObject.SetActive(true);
+            
         }
-        else
+        if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber == 1)
         {
+            CheckButtons();
             oPlayerScore++;
             oPlayerScoreText.text = oPlayerScore.ToString();
             
@@ -253,6 +266,8 @@ public class GameController : MonoBehaviour
 
         winningLines[indexIn].SetActive(true);
         
+        //Updates the playing field visually
+
     }
 
     public void Rematch()
@@ -330,6 +345,20 @@ public class GameController : MonoBehaviour
         {
             tictactoeSpaces[1].image.sprite = playIcons[1];
             tictactoeSpaces[1].interactable = false;
+            Debug.Log("Made an X");
+        }
+        
+        //TR
+        if (markedSpaces[2] == 1)
+        {
+            tictactoeSpaces[2].image.sprite = playIcons[0];
+            tictactoeSpaces[2].interactable = false;
+            Debug.Log("Made an O");
+        }
+        if (markedSpaces[2] == 2)
+        {
+            tictactoeSpaces[2].image.sprite = playIcons[1];
+            tictactoeSpaces[2].interactable = false;
             Debug.Log("Made an X");
         }
         

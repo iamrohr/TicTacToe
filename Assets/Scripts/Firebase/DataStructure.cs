@@ -24,6 +24,8 @@ public class GameInfo
     public int turnCountFB;
     public int[] markedSpacesFB;
     public bool setupGameFB;
+    public bool winnerCheckFB;
+    public int winnerNumberFB;
 }
 
 [Serializable]
