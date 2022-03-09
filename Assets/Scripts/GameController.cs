@@ -263,7 +263,7 @@ public class GameController : MonoBehaviour
 
     void WinnerDisplay(int indexIn)
     {
-        if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber == 0)
+        if (GameData.Instance.gameData.winnerPlayerNumberFB == 1)
         {
             CheckButtons();
 
@@ -272,7 +272,7 @@ public class GameController : MonoBehaviour
             winnerTextX.gameObject.SetActive(true);
             
         }
-        if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber == 1)
+        if (GameData.Instance.gameData.winnerPlayerNumberFB == 2)
         {
             CheckButtons();
 
