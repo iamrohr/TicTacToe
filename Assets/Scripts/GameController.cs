@@ -37,12 +37,16 @@ public class GameController : MonoBehaviour
     
     //Wait panel
     public GameObject waitPanel;
+
+    public UnityEngine.UI.Image player1;
+    public UnityEngine.UI.Image player2;
+
     
 
     void Start()
     {
         
-         //Om spelet körs första gången kör GameSetup
+        //Om spelet körs första gången kör GameSetup
         if (!GameData.Instance.gameData.setupGameFB)
         {
             GameSetup();
@@ -58,7 +62,7 @@ public class GameController : MonoBehaviour
         UpdateLocalPlayerData();
         //Check whos turn it is and deactivate panel etc etc
         WhosTurnFunction();
-
+        
         //Listener varje gång kommer den uppdatera. Delegate.
        FirebaseDatabase.DefaultInstance.RootReference.Child("games/").Child(GameData.Instance.gameData.gameID).ValueChanged += CheckIfChangesInGameHappens;
     }
@@ -87,6 +91,16 @@ public class GameController : MonoBehaviour
             CheckButtons();
             //Check whos turn it is and deactivate panel etc etc
             WhosTurnFunction();
+
+            if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber == 0)
+            {
+                player1.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor1FB, 1, 1);
+            }
+            else if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber == 1)
+            {
+                player2.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor2FB, 1, 1);
+            }
+
             
             if (GameData.Instance.gameData.winnerCheckFB)
             {
@@ -101,7 +115,11 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        // CheckButtons();
+        //Update Colors
+        if(GameData.Instance.gameData.playerColor1FB != 0)
+        player2.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor1FB, 1, 1);
+        if(GameData.Instance.gameData.playerColor2FB != 0)
+        player1.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor2FB, 1, 1);
     }
 
     private void WhosTurnFunction()
@@ -126,9 +144,26 @@ public class GameController : MonoBehaviour
     private static void UpdateLocalPlayerData()
     {
         if (GameData.Instance.gameData.players[0].userID == GameData.Instance.userID)
+        {
             GameData.Instance.gamePlayer = GameData.Instance.gameData.players[0];
+            
+            //Get color and save in FB
+            GameData.Instance.gameData.playerColor1FB = GameData.Instance.gamePlayer.colorHue;
+            string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
+            SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
+
+        }
+        
         else if (GameData.Instance.gameData.players[1].userID == GameData.Instance.userID)
+        {
             GameData.Instance.gamePlayer = GameData.Instance.gameData.players[1];
+            
+            //Get color and save in FB
+            GameData.Instance.gameData.playerColor2FB = GameData.Instance.gamePlayer.colorHue;
+            string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
+            SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
+        }
+        
     }
 
     void GameSetup()
@@ -161,6 +196,8 @@ public class GameController : MonoBehaviour
         string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
         SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
         
+        
+        
         Debug.Log("I have run setup");
 
     }
@@ -182,7 +219,6 @@ public class GameController : MonoBehaviour
                 Draw();
             }
         }
-        
 
         if (whoseTurn == 0)
         {
@@ -248,8 +284,6 @@ public class GameController : MonoBehaviour
                     GameData.Instance.gameData.winnerPlayerNumberFB = 2;
                 }
                 
-                
-                
                 GameData.Instance.gameData.winnerNumberFB = i;
                 GameData.Instance.gameData.winnerCheckFB = true;
                 string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
@@ -266,7 +300,6 @@ public class GameController : MonoBehaviour
         if (GameData.Instance.gameData.winnerPlayerNumberFB == 1)
         {
             CheckButtons();
-
             
             winnerPanel.gameObject.SetActive(true);
             winnerTextX.gameObject.SetActive(true);
@@ -275,7 +308,6 @@ public class GameController : MonoBehaviour
         if (GameData.Instance.gameData.winnerPlayerNumberFB == 2)
         {
             CheckButtons();
-
             
             winnerPanel.gameObject.SetActive(true);
             winnerTextO.gameObject.SetActive(true);
@@ -333,6 +365,7 @@ public class GameController : MonoBehaviour
     {
     
     }
+    
 
     void SaveGameData()
     {
@@ -475,6 +508,7 @@ public class GameController : MonoBehaviour
             tictactoeSpaces[8].interactable = false;
             Debug.Log("Made an X");
         }
+        
         
     }
 
