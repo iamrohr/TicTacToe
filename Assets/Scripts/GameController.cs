@@ -82,6 +82,11 @@ public class GameController : MonoBehaviour
             whoseTurn = gameInfo.whosTurnFB;
             turnCount = gameInfo.turnCountFB;
             markedSpaces = gameInfo.markedSpacesFB;
+            
+            //Updates the playing field visually
+            CheckButtons();
+            //Check whos turn it is and deactivate panel etc etc
+            WhosTurnFunction();
         }
         catch
         {
