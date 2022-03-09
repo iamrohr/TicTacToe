@@ -237,6 +237,19 @@ public class GameController : MonoBehaviour
             if (solutions[i] == 3 * (whoseTurn + 1))
             {
                 WinnerDisplay(i);
+
+                if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber == 0)
+                {
+                    GameData.Instance.gameData.winnerPlayerNumberFB = 1;
+                }
+
+                if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber == 1)
+                {
+                    GameData.Instance.gameData.winnerPlayerNumberFB = 2;
+                }
+                
+                
+                
                 GameData.Instance.gameData.winnerNumberFB = i;
                 GameData.Instance.gameData.winnerCheckFB = true;
                 string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
@@ -253,8 +266,7 @@ public class GameController : MonoBehaviour
         if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber == 0)
         {
             CheckButtons();
-            xPlayerScore++;
-            xPlayerScoreText.text = xPlayerScore.ToString();
+
             
             winnerPanel.gameObject.SetActive(true);
             winnerTextX.gameObject.SetActive(true);
@@ -263,14 +275,26 @@ public class GameController : MonoBehaviour
         if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber == 1)
         {
             CheckButtons();
-            oPlayerScore++;
-            oPlayerScoreText.text = oPlayerScore.ToString();
+
             
             winnerPanel.gameObject.SetActive(true);
             winnerTextO.gameObject.SetActive(true);
         }
+        
+        if (GameData.Instance.gameData.winnerPlayerNumberFB == 1)
+        {
+            xPlayerScore++;
+            xPlayerScoreText.text = xPlayerScore.ToString();
+        }
+
+        if (GameData.Instance.gameData.winnerPlayerNumberFB == 2)
+        {
+            oPlayerScore++;
+            oPlayerScoreText.text = oPlayerScore.ToString();
+        }
 
         winningLines[indexIn].SetActive(true);
+        
         
         //Updates the playing field visually
 

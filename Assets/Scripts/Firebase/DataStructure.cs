@@ -26,6 +26,7 @@ public class GameInfo
     public bool setupGameFB;
     public bool winnerCheckFB;
     public int winnerNumberFB;
+    public int winnerPlayerNumberFB;
 }
 
 [Serializable]
