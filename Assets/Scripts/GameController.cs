@@ -109,11 +109,17 @@ public class GameController : MonoBehaviour
         if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber == 0)
         {
             waitPanel.SetActive(false);
+            
+            turnIcons[0].SetActive(true);
+            turnIcons[1].SetActive(false);
         }
 
         if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber == 1)
         {
             waitPanel.SetActive(false);
+            
+            turnIcons[0].SetActive(false);
+            turnIcons[1].SetActive(true);
         }
     }
 
