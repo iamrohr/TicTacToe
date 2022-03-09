@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Auth;
 using System;
-using System.Runtime.CompilerServices;
-using UnityEditor.Build.Content;
 public class GameData : MonoBehaviour
 {
     private static GameData _instance;
