@@ -20,12 +20,6 @@ public class FirebaseData : MonoBehaviour
             auth = FirebaseAuth.DefaultInstance;
         });
     }
-
-    public void SignInTestUser(string email = "test1@test.test")
-    {
-        SignIn(email, "Test123!");
-    }
-    
     
     private void RegisterNewUser(string email, string password)
     {
@@ -64,18 +58,6 @@ public class FirebaseData : MonoBehaviour
         });
     }
     
-    private void Update()
-    {
-        // if (Input.GetKeyDown(KeyCode.A))
-        //     AnonymousSignIn();
-        //
-        // if (Input.GetKeyDown(KeyCode.Escape))
-        //     SignOut();
-        //
-        // if (Input.GetKeyDown(KeyCode.D))
-        //     DataTest(auth.CurrentUser.UserId, Random.Range(0, 100).ToString());
-    }
-
     private void SignOut()
     {
         auth.SignOut();
@@ -128,7 +110,6 @@ public class FirebaseData : MonoBehaviour
             {
                 Debug.LogError(task.Exception);
             }
-
             //here we get the result from our database.
             DataSnapshot snap = task.Result;
 

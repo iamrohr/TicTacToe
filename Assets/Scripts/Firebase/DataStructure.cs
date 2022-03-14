@@ -27,7 +27,6 @@ public class GameInfo
     public bool winnerCheckFB;
     public int winnerNumberFB;
     public int winnerPlayerNumberFB;
-
     public float playerColor1FB;
     public float playerColor2FB;
 }

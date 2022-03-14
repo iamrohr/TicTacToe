@@ -10,13 +10,13 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     //Turn
-    public int whoseTurn; //0 = X  and 1 = O
-    public int turnCount; //Number of turns played
-    public GameObject[] turnIcons; // Displays whos turn it is
-    public int[] markedSpaces; //ID's which space that was marked by which player
+    public int whoseTurn;
+    public int turnCount; 
+    public GameObject[] turnIcons; 
+    public int[] markedSpaces; 
     
     //Graphics
-    public Sprite[] playIcons; //0 = x and 1 = O
+    public Sprite[] playIcons; 
     public Button[] tictactoeSpaces;
 
     //Winner states
@@ -32,21 +32,15 @@ public class GameController : MonoBehaviour
     public Text xPlayerScoreText;
     public Text oPlayerScoreText;
     public bool setupGame;
-
     public GameController gameController;
     
     //Wait panel
     public GameObject waitPanel;
-
     public UnityEngine.UI.Image player1;
     public UnityEngine.UI.Image player2;
-
     
-
     void Start()
     {
-        
-        //Om spelet körs första gången kör GameSetup
         if (!GameData.Instance.gameData.setupGameFB)
         {
             GameSetup();
@@ -55,19 +49,13 @@ public class GameController : MonoBehaviour
         whoseTurn = GameData.Instance.gameData.whosTurnFB;
         turnCount = GameData.Instance.gameData.turnCountFB;
         markedSpaces = GameData.Instance.gameData.markedSpacesFB;
-
-        //Updates the playing field visually
         CheckButtons();
-        //Identify player and update local player data
         UpdateLocalPlayerData();
-        //Check whos turn it is and deactivate panel etc etc
         WhosTurnFunction();
         
-        //Listener varje gång kommer den uppdatera. Delegate.
-       FirebaseDatabase.DefaultInstance.RootReference.Child("games/").Child(GameData.Instance.gameData.gameID).ValueChanged += CheckIfChangesInGameHappens;
+        FirebaseDatabase.DefaultInstance.RootReference.Child("games/").Child(GameData.Instance.gameData.gameID).ValueChanged += CheckIfChangesInGameHappens;
     }
-
-    //kollar om ändringar hänt
+    
     void CheckIfChangesInGameHappens(object sender, ValueChangedEventArgs args)
     {
         if (args.DatabaseError != null)
@@ -75,8 +63,7 @@ public class GameController : MonoBehaviour
             Debug.LogError(args.DatabaseError.Message);
             return;
         }
-
-        //Konverterar till game info.
+        
         GameInfo gameInfo = JsonUtility.FromJson<GameInfo>(args.Snapshot.GetRawJsonValue());
 
         try
@@ -87,47 +74,26 @@ public class GameController : MonoBehaviour
             turnCount = gameInfo.turnCountFB;
             markedSpaces = gameInfo.markedSpacesFB;
             
-            //Updates the playing field visually
             CheckButtons();
-            //Check whos turn it is and deactivate panel etc etc
             WhosTurnFunction();
-
-            if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber == 0)
-            {
-                player1.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor1FB, 1, 1);
-            }
-            else if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber == 1)
-            {
-                player2.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor2FB, 1, 1);
-            }
-
+            PlayerColors();
             
             if (GameData.Instance.gameData.winnerCheckFB)
             {
                 WinnerDisplay(GameData.Instance.gameData.winnerNumberFB);
             }
         }
+        
         catch
         {
             
         }
     }
-
-    private void Update()
-    {
-        //Update Colors
-        if(GameData.Instance.gameData.playerColor1FB != 0)
-        player2.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor1FB, 1, 1);
-        if(GameData.Instance.gameData.playerColor2FB != 0)
-        player1.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor2FB, 1, 1);
-    }
-
     private void WhosTurnFunction()
     {
         if (whoseTurn == 0 && GameData.Instance.gamePlayer.playerNumber == 0)
         {
             waitPanel.SetActive(false);
-            
             turnIcons[0].SetActive(true);
             turnIcons[1].SetActive(false);
         }
@@ -135,37 +101,28 @@ public class GameController : MonoBehaviour
         if (whoseTurn == 1 && GameData.Instance.gamePlayer.playerNumber == 1)
         {
             waitPanel.SetActive(false);
-            
             turnIcons[0].SetActive(false);
             turnIcons[1].SetActive(true);
         }
     }
-
     private static void UpdateLocalPlayerData()
     {
         if (GameData.Instance.gameData.players[0].userID == GameData.Instance.userID)
         {
             GameData.Instance.gamePlayer = GameData.Instance.gameData.players[0];
-            
-            //Get color and save in FB
             GameData.Instance.gameData.playerColor1FB = GameData.Instance.gamePlayer.colorHue;
             string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
             SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
-
         }
         
         else if (GameData.Instance.gameData.players[1].userID == GameData.Instance.userID)
         {
             GameData.Instance.gamePlayer = GameData.Instance.gameData.players[1];
-            
-            //Get color and save in FB
             GameData.Instance.gameData.playerColor2FB = GameData.Instance.gamePlayer.colorHue;
             string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
             SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
         }
-        
     }
-
     void GameSetup()
     {
         whoseTurn = 0;
@@ -178,28 +135,18 @@ public class GameController : MonoBehaviour
             tictactoeSpaces[i].interactable = true;
             tictactoeSpaces[i].GetComponent<Image>().sprite = null;
         }
-        
-        //Markera alla till, bara för starten -1 
         for (int i = 0; i < markedSpaces.Length; i++)
         {
             markedSpaces[i] = -100;
         }
 
         setupGame = true;
-        
         GameData.Instance.gameData.setupGameFB = setupGame;
-        //Kanske byta ut till FB direkt och inte ha 2 olika. Arbeta med Singelton istället för ny. 
         GameData.Instance.gameData.markedSpacesFB = markedSpaces;
         GameData.Instance.gameData.turnCountFB = turnCount;
         GameData.Instance.gameData.whosTurnFB = whoseTurn;
-
         string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
         SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
-        
-        
-        
-        Debug.Log("I have run setup");
-
     }
 
     public void TicTacToeButton(int whichNumber)
@@ -223,30 +170,25 @@ public class GameController : MonoBehaviour
         if (whoseTurn == 0)
         {
             whoseTurn = 1;
-            
             turnIcons[0].SetActive(false);
             turnIcons[1].SetActive(true);
         }
         else
         {
             whoseTurn = 0;
-            
             turnIcons[0].SetActive(true);
             turnIcons[1].SetActive(false);
         }
         
-        //Kanske byta ut till FB direkt och inte ha 2 olika. Arbeta med Singelton istället för ny. 
+        //Save FB to local
         GameData.Instance.gameData.markedSpacesFB = markedSpaces;
         GameData.Instance.gameData.turnCountFB = turnCount;
         GameData.Instance.gameData.whosTurnFB = whoseTurn;
-        
         
         //Ta user data från detta gamet. Gör till en json string och skicka in i save manager och spara på FB. 
         string jSon = JsonUtility.ToJson(GameData.Instance.gameData);
         SaveAndLoadManager.Instance.SaveData("games/" + GameData.Instance.gameData.gameID, jSon);
         
-        
-        //Inactivate game
         waitPanel.SetActive(true);
     }
 
@@ -294,13 +236,11 @@ public class GameController : MonoBehaviour
         return false;
     }
     
-
     void WinnerDisplay(int indexIn)
     {
         if (GameData.Instance.gameData.winnerPlayerNumberFB == 1)
         {
             CheckButtons();
-            
             winnerPanel.gameObject.SetActive(true);
             winnerTextX.gameObject.SetActive(true);
             
@@ -308,7 +248,6 @@ public class GameController : MonoBehaviour
         if (GameData.Instance.gameData.winnerPlayerNumberFB == 2)
         {
             CheckButtons();
-            
             winnerPanel.gameObject.SetActive(true);
             winnerTextO.gameObject.SetActive(true);
         }
@@ -324,77 +263,37 @@ public class GameController : MonoBehaviour
             oPlayerScore++;
             oPlayerScoreText.text = oPlayerScore.ToString();
         }
-
+        
         winningLines[indexIn].SetActive(true);
-        
-        
-        //Updates the playing field visually
-
     }
-
-    public void Rematch()
+    
+    void PlayerColors()
     {
-        GameSetup();
-
-        for (int i = 0; i < winningLines.Length; i++)
-        {
-            winningLines[i].SetActive(false);
-        }
+        if(GameData.Instance.gameData.playerColor1FB != 0)
+            player2.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor1FB, 1, 1);
         
-        winnerPanel.SetActive(false);
-        drawState.SetActive(false);
+        if(GameData.Instance.gameData.playerColor2FB != 0)
+            player1.color = Color.HSVToRGB(GameData.Instance.gameData.playerColor2FB, 1, 1);
     }
-
-    public void Restart()
-    {
-        Rematch();
-        xPlayerScore = 0;
-        oPlayerScore = 0;
-        xPlayerScoreText.text = "0";
-        oPlayerScoreText.text = "0";
-    }
-
+    
     void Draw()
     {
         winnerPanel.SetActive(true);
         drawState.SetActive(true);
     }
-
-
-    private static void LoadGameData()
-    {
-    
-    }
-    
-
-    void SaveGameData()
-    {
-        // SaveManager.Instance.SaveData("users/");
-    }
-
-    public void DataToSend()
-    {
-        GameData.Instance.gameData.markedSpacesFB = markedSpaces;
-        GameData.Instance.gameData.turnCountFB = turnCount;
-        GameData.Instance.gameData.whosTurnFB = whoseTurn;
-    }
     
     void CheckButtons()
     {
-        Debug.Log("Checking buttons");
-        
         //TL
         if (markedSpaces[0] == 1)
         {
             tictactoeSpaces[0].image.sprite = playIcons[0];
             tictactoeSpaces[0].interactable = false;
-            Debug.Log("Made an O");
         }
         if (markedSpaces[0] == 2)
         {
             tictactoeSpaces[0].image.sprite = playIcons[1];
             tictactoeSpaces[0].interactable = false;
-            Debug.Log("Made an X");
         }
         
         //M
@@ -402,13 +301,11 @@ public class GameController : MonoBehaviour
         {
             tictactoeSpaces[1].image.sprite = playIcons[0];
             tictactoeSpaces[1].interactable = false;
-            Debug.Log("Made an O");
         }
         if (markedSpaces[1] == 2)
         {
             tictactoeSpaces[1].image.sprite = playIcons[1];
             tictactoeSpaces[1].interactable = false;
-            Debug.Log("Made an X");
         }
         
         //TR
@@ -416,13 +313,11 @@ public class GameController : MonoBehaviour
         {
             tictactoeSpaces[2].image.sprite = playIcons[0];
             tictactoeSpaces[2].interactable = false;
-            Debug.Log("Made an O");
         }
         if (markedSpaces[2] == 2)
         {
             tictactoeSpaces[2].image.sprite = playIcons[1];
             tictactoeSpaces[2].interactable = false;
-            Debug.Log("Made an X");
         }
         
         //TR
@@ -430,13 +325,11 @@ public class GameController : MonoBehaviour
         {
             tictactoeSpaces[3].image.sprite = playIcons[0];
             tictactoeSpaces[3].interactable = false;
-            Debug.Log("Made an O");
         }
         if (markedSpaces[3] == 2)
         {
             tictactoeSpaces[3].image.sprite = playIcons[1];
             tictactoeSpaces[3].interactable = false;
-            Debug.Log("Made an X");
         }
         
         //ML
@@ -444,13 +337,11 @@ public class GameController : MonoBehaviour
         {
             tictactoeSpaces[4].image.sprite = playIcons[0];
             tictactoeSpaces[4].interactable = false;
-            Debug.Log("Made an O");
         }
         if (markedSpaces[4] == 2)
         {
             tictactoeSpaces[4].image.sprite = playIcons[1];
             tictactoeSpaces[4].interactable = false;
-            Debug.Log("Made an X");
         }
         
         //MM
@@ -458,13 +349,11 @@ public class GameController : MonoBehaviour
         {
             tictactoeSpaces[5].image.sprite = playIcons[0];
             tictactoeSpaces[5].interactable = false;
-            Debug.Log("Made an O");
         }
         if (markedSpaces[5] == 2)
         {
             tictactoeSpaces[5].image.sprite = playIcons[1];
             tictactoeSpaces[5].interactable = false;
-            Debug.Log("Made an X");
         }
         
         //MR
@@ -472,13 +361,11 @@ public class GameController : MonoBehaviour
         {
             tictactoeSpaces[6].image.sprite = playIcons[0];
             tictactoeSpaces[6].interactable = false;
-            Debug.Log("Made an O");
         }
         if (markedSpaces[6] == 2)
         {
             tictactoeSpaces[6].image.sprite = playIcons[1];
             tictactoeSpaces[6].interactable = false;
-            Debug.Log("Made an X");
         }
         
         //BL
@@ -486,13 +373,11 @@ public class GameController : MonoBehaviour
         {
             tictactoeSpaces[7].image.sprite = playIcons[0];
             tictactoeSpaces[7].interactable = false;
-            Debug.Log("Made an O");
         }
         if (markedSpaces[7] == 2)
         {
             tictactoeSpaces[7].image.sprite = playIcons[1];
             tictactoeSpaces[7].interactable = false;
-            Debug.Log("Made an X");
         }
         
         //BM
@@ -500,17 +385,12 @@ public class GameController : MonoBehaviour
         {
             tictactoeSpaces[8].image.sprite = playIcons[0];
             tictactoeSpaces[8].interactable = false;
-            Debug.Log("Made an O");
         }
         if (markedSpaces[8] == 2)
         {
             tictactoeSpaces[8].image.sprite = playIcons[1];
             tictactoeSpaces[8].interactable = false;
-            Debug.Log("Made an X");
         }
-        
-        
     }
-
 }
 
